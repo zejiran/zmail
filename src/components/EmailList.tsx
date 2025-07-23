@@ -1,12 +1,12 @@
-import { useLocation, useNavigate } from "react-router-dom"
-import { useEmailStore } from "../store/emailStore"
-import { CONFIG } from "../utils/constants"
-import type { Email } from "../types"
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useEmailStore } from '../store/emailStore'
+import { CONFIG } from '../utils/constants'
+import type { Email } from '../types'
 
 export function EmailList() {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
   const location = useLocation()
-  const path = location.pathname.replace("/", "")
+  const path = location.pathname.replace('/', '')
   const emails = useEmailStore((s) => s.emails)
 
   const filtered = emails.filter((email) => filterByFolder(email, path))
@@ -21,14 +21,12 @@ export function EmailList() {
             key={email.id}
             onClick={() => navigate(`/thread/${email.threadId}`)}
             className={`border rounded p-3 shadow-sm cursor-pointer ${
-              email.unread ? "bg-white" : "bg-gray-50"
+              email.unread ? 'bg-white' : 'bg-gray-50'
             }`}
           >
             <div className="flex justify-between items-center">
               <div className="font-medium">{email.from.name}</div>
-              <div className="text-xs text-gray-500">
-                {new Date(email.date).toLocaleString()}
-              </div>
+              <div className="text-xs text-gray-500">{new Date(email.date).toLocaleString()}</div>
             </div>
             <div className="text-sm font-semibold">{email.subject}</div>
             <div className="text-sm text-gray-700 truncate">{email.body}</div>
@@ -41,19 +39,19 @@ export function EmailList() {
 
 function filterByFolder(email: Email, folder: string): boolean {
   switch (folder) {
-    case "inbox":
+    case 'inbox':
       return !email.isSpam && !email.isTrash
-    case "spam":
+    case 'spam':
       return email.isSpam
-    case "trash":
+    case 'trash':
       return email.isTrash
-    case "starred":
+    case 'starred':
       return (
         email.starred &&
         (!email.isTrash || CONFIG.showStarredSpamInStarred) &&
         (!email.isSpam || CONFIG.showStarredSpamInStarred)
       )
-    case "all":
+    case 'all':
       return true
     default:
       return false

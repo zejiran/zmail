@@ -1,37 +1,37 @@
-import clsx from "clsx"
-import { NavLink } from "react-router-dom"
-import { useEmailStore } from "../store/emailStore"
-import type { Email } from "../types"
-import { CONFIG } from "../utils/constants"
+import clsx from 'clsx'
+import { NavLink } from 'react-router-dom'
+import { useEmailStore } from '../store/emailStore'
+import type { Email } from '../types'
+import { CONFIG } from '../utils/constants'
 
-const folders = ["inbox", "starred", "spam", "trash", "all"] as const
+const folders = ['inbox', 'starred', 'spam', 'trash', 'all'] as const
 
 export function Sidebar() {
   const emails = useEmailStore((s) => s.emails)
 
   const getCount = (folder: string) => {
-    if (folder === "inbox") {
+    if (folder === 'inbox') {
       return CONFIG.showTotalCountInsteadOfUnread
         ? emails.filter((e) => !e.isSpam && !e.isTrash).length
         : emails.filter((e) => !e.isSpam && !e.isTrash && e.unread).length
     }
-    if (folder === "starred") {
+    if (folder === 'starred') {
       return emails.filter((e) => e.starred && includeInFolder(e, folder)).length
     }
-    if (folder === "spam") {
+    if (folder === 'spam') {
       return emails.filter((e) => e.isSpam).length
     }
-    if (folder === "trash") {
+    if (folder === 'trash') {
       return emails.filter((e) => e.isTrash).length
     }
-    if (folder === "all") {
+    if (folder === 'all') {
       return emails.length
     }
     return 0
   }
 
   const includeInFolder = (email: Email, folder: string) => {
-    if (folder === "starred") {
+    if (folder === 'starred') {
       return (
         email.starred &&
         (!email.isTrash || CONFIG.showStarredSpamInStarred) &&
@@ -50,8 +50,8 @@ export function Sidebar() {
             to={`/${folder}`}
             className={({ isActive }) =>
               clsx(
-                "text-sm px-3 py-2 rounded hover:bg-gray-100 flex justify-between",
-                isActive && "bg-gray-200 font-semibold"
+                'text-sm px-3 py-2 rounded hover:bg-gray-100 flex justify-between',
+                isActive && 'bg-gray-200 font-semibold'
               )
             }
           >

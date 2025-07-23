@@ -1,7 +1,7 @@
-import { Routes, Route, Navigate } from "react-router-dom"
-import { Sidebar } from "./components/Sidebar"
-import { EmailList } from "./components/EmailList"
-import { ThreadView } from "./components/ThreadView"
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { Sidebar } from './components/Sidebar'
+import { EmailList } from './components/EmailList'
+import { ThreadView } from './components/ThreadView'
 
 function App() {
   return (

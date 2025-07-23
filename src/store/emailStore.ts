@@ -1,7 +1,7 @@
-import { create } from "zustand"
-import { emails as initialEmails } from "../data/emails"
-import type { Email } from "../types"
-import { CONFIG } from "../utils/constants"
+import { create } from 'zustand'
+import { emails as initialEmails } from '../data/emails'
+import type { Email } from '../types'
+import { CONFIG } from '../utils/constants'
 
 interface EmailStore {
   emails: Email[]
@@ -16,22 +16,16 @@ export const useEmailStore = create<EmailStore>((set) => ({
   emails: [...initialEmails],
   markEmailAsRead: (id) =>
     set((state) => ({
-      emails: state.emails.map((e: Email) =>
-        e.id === id ? { ...e, unread: false } : e
-      ),
+      emails: state.emails.map((e: Email) => (e.id === id ? { ...e, unread: false } : e)),
     })),
   toggleStar: (id) =>
     set((state) => ({
-      emails: state.emails.map((e: Email) =>
-        e.id === id ? { ...e, starred: !e.starred } : e
-      ),
+      emails: state.emails.map((e: Email) => (e.id === id ? { ...e, starred: !e.starred } : e)),
     })),
   moveToSpam: (threadId) =>
     set((state) => ({
       emails: state.emails.map((e: Email) =>
-        e.threadId === threadId
-          ? { ...e, isSpam: true, isTrash: false }
-          : e
+        e.threadId === threadId ? { ...e, isSpam: true, isTrash: false } : e
       ),
     })),
   moveToTrash: (threadId) =>
