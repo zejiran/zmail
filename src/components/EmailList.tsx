@@ -1,9 +1,10 @@
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useEmailStore } from "../store/emailStore"
 import { CONFIG } from "../utils/constants"
 import type { Email } from "../types"
 
 export function EmailList() {
+    const navigate = useNavigate()
   const location = useLocation()
   const path = location.pathname.replace("/", "")
   const emails = useEmailStore((s) => s.emails)
@@ -18,6 +19,7 @@ export function EmailList() {
         filtered.map((email) => (
           <div
             key={email.id}
+            onClick={() => navigate(`/thread/${email.threadId}`)}
             className={`border rounded p-3 shadow-sm cursor-pointer ${
               email.unread ? "bg-white" : "bg-gray-50"
             }`}

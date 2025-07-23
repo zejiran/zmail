@@ -16,19 +16,19 @@ export const useEmailStore = create<EmailStore>((set) => ({
   emails: [...initialEmails],
   markEmailAsRead: (id) =>
     set((state) => ({
-      emails: state.emails.map((e) =>
+      emails: state.emails.map((e: Email) =>
         e.id === id ? { ...e, unread: false } : e
       ),
     })),
   toggleStar: (id) =>
     set((state) => ({
-      emails: state.emails.map((e) =>
+      emails: state.emails.map((e: Email) =>
         e.id === id ? { ...e, starred: !e.starred } : e
       ),
     })),
   moveToSpam: (threadId) =>
     set((state) => ({
-      emails: state.emails.map((e) =>
+      emails: state.emails.map((e: Email) =>
         e.threadId === threadId
           ? { ...e, isSpam: true, isTrash: false }
           : e
@@ -36,7 +36,7 @@ export const useEmailStore = create<EmailStore>((set) => ({
     })),
   moveToTrash: (threadId) =>
     set((state) => ({
-      emails: state.emails.map((e) =>
+      emails: state.emails.map((e: Email) =>
         e.threadId === threadId
           ? {
               ...e,
@@ -49,7 +49,7 @@ export const useEmailStore = create<EmailStore>((set) => ({
     })),
   moveToInbox: (threadId) =>
     set((state) => ({
-      emails: state.emails.map((e) =>
+      emails: state.emails.map((e: Email) =>
         e.threadId === threadId ? { ...e, isSpam: false, isTrash: false } : e
       ),
     })),
