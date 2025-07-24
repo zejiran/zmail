@@ -57,14 +57,11 @@ npm run dev
 
 ## 📱 Screenshots
 
-<!-- Add screenshots here -->
-*Screenshots will be added soon*
-
 ### Email List
-<!-- ![Desktop View](screenshots/desktop.png) -->
+<img width="1421" height="1016" alt="Screenshot 2025-07-24 at 4 24 34 AM" src="https://github.com/user-attachments/assets/f638ef1e-ce47-419d-9495-8afd8eeeefc0" />
 
 ### Email Thread
-<!-- ![Email Thread](screenshots/thread.png) -->
+<img width="1421" height="1016" alt="Screenshot 2025-07-24 at 4 24 46 AM" src="https://github.com/user-attachments/assets/f55e3c67-c4fa-4c5b-b958-3cbba7f9b715" />
 
 ## 📝 License
 
