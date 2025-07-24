@@ -4,10 +4,8 @@ export const CONFIG = {
   starFirstEmailInsteadOfLast: true,
   allowLastEmailCollapse: true,
   hideSpamButtonInTrash: true,
-  showTotalCountInsteadOfUnread: false,
+  showTotalCountInsteadOfUnread: true,
   showSpamInAllMail: true,
   removeStarOnTrash: true,
-  showStarredSpamInStarred: true,
-  extendHourDisplay: true,
   useSimpleEmptyMessage: true,
 }
