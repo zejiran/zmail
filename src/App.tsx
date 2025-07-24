@@ -5,7 +5,7 @@ import { ThreadView } from './components/ThreadView'
 
 function App() {
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <div className="flex flex-col h-screen bg-white overflow-hidden">
       <header className="bg-white border-b border-gray-200 px-14 py-3 flex-shrink-0">
         <div className="flex items-center">
           <img src="/zmail-logo.png" alt="ZMail" className="h-8 w-auto" />
