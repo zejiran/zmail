@@ -14,22 +14,41 @@ export function Sidebar() {
   const emails = useEmailStore((s) => s.emails)
 
   const getCount = (folder: string) => {
+    const getUniqueThreads = (filteredEmails: typeof emails) => {
+      const threadIds = new Set(filteredEmails.map((e) => e.threadId))
+      return threadIds.size
+    }
+
+    const getUnreadThreads = (filteredEmails: typeof emails) => {
+      const unreadThreadIds = new Set()
+      filteredEmails.forEach((email) => {
+        if (email.unread) {
+          unreadThreadIds.add(email.threadId)
+        }
+      })
+      return unreadThreadIds.size
+    }
+
     if (folder === 'inbox') {
+      const inboxEmails = emails.filter((e) => !e.isSpam && !e.isTrash)
       return CONFIG.showTotalCountInsteadOfUnread
-        ? emails.filter((e) => !e.isSpam && !e.isTrash).length
-        : emails.filter((e) => !e.isSpam && !e.isTrash && e.unread).length
+        ? getUniqueThreads(inboxEmails)
+        : getUnreadThreads(inboxEmails)
     }
     if (folder === 'starred') {
-      return emails.filter((e) => e.starred && !e.isSpam && !e.isTrash).length
+      const starredEmails = emails.filter((e) => e.starred && !e.isSpam && !e.isTrash)
+      return getUniqueThreads(starredEmails)
     }
     if (folder === 'spam') {
-      return emails.filter((e) => e.isSpam).length
+      const spamEmails = emails.filter((e) => e.isSpam)
+      return getUniqueThreads(spamEmails)
     }
     if (folder === 'trash') {
-      return emails.filter((e) => e.isTrash).length
+      const trashEmails = emails.filter((e) => e.isTrash)
+      return getUniqueThreads(trashEmails)
     }
     if (folder === 'all') {
-      return emails.length
+      return getUniqueThreads(emails)
     }
     return 0
   }
