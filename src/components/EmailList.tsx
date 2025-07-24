@@ -10,8 +10,30 @@ export const EmailList = () => {
   const path = location.pathname.replace('/', '')
   const { emails, toggleStar } = useEmailStore()
 
-  const filtered = emails
-    .filter((email) => filterByFolder(email, path))
+  const threadMap = new Map<string, Email>()
+  const threadUnreadMap = new Map<string, boolean>()
+
+  // First pass: collect all filtered emails and track unread status per thread
+  const filteredEmails = emails.filter((email) => filterByFolder(email, path))
+
+  filteredEmails.forEach((email) => {
+    // Track if any email in this thread is unread
+    const currentUnread = threadUnreadMap.get(email.threadId) || false
+    threadUnreadMap.set(email.threadId, currentUnread || email.unread)
+
+    // Keep the latest email for each thread
+    const existing = threadMap.get(email.threadId)
+    if (!existing || new Date(email.date).getTime() > new Date(existing.date).getTime()) {
+      threadMap.set(email.threadId, email)
+    }
+  })
+
+  // Create final filtered list with thread-level unread status
+  const filtered = Array.from(threadMap.values())
+    .map((email) => ({
+      ...email,
+      unread: threadUnreadMap.get(email.threadId) || false,
+    }))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   const handleStarClick = (e: React.MouseEvent, emailId: string) => {
@@ -23,7 +45,6 @@ export const EmailList = () => {
     navigate(`/thread/${email.threadId}`)
   }
 
-  // Don't show star button in trash
   const showStarButton = path !== 'trash'
 
   return (
