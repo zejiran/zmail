@@ -27,13 +27,13 @@ export const EmailList = () => {
   const showStarButton = path !== 'trash'
 
   return (
-    <div className="flex-1 bg-white">
+    <div className="flex-1 bg-white flex flex-col overflow-hidden">
       {filtered.length === 0 ? (
         <div className="p-8 text-center">
           <p className="text-gray-500 text-lg">Empty</p>
         </div>
       ) : (
-        <div className="divide-y divide-gray-100">
+        <div className="flex-1 overflow-y-auto divide-y divide-gray-100">
           {filtered.map((email) => (
             <div
               key={email.id}
