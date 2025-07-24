@@ -67,7 +67,7 @@ export const EmailList = () => {
                     email.unread ? 'font-bold text-black' : 'font-normal text-gray-600'
                   }`}
                 >
-                  {formatSenderName(email.from.name, email.threadId, emails)}
+                  <span>{formatSenderNameWithCount(email.from.name, email.threadId, emails)}</span>
                 </div>
               </div>
 
@@ -111,24 +111,26 @@ function filterByFolder(email: Email, folder: string): boolean {
   }
 }
 
-function formatSenderName(name: string, threadId: string, allEmails: Email[]): string {
+function formatSenderNameWithCount(name: string, threadId: string, allEmails: Email[]) {
   const threadEmails = allEmails.filter((email) => email.threadId === threadId)
 
   if (threadEmails.length <= 1) {
-    return name
+    return <span>{name}</span>
   }
 
   const uniqueSenders = Array.from(new Set(threadEmails.map((email) => email.from.name)))
 
   if (uniqueSenders.length === 1) {
-    return name
+    return <span>{name}</span>
   }
 
-  if (uniqueSenders.length === 2) {
-    return uniqueSenders.join(', ')
-  }
+  const senderNames =
+    uniqueSenders.length === 2 ? uniqueSenders.join(', ') : uniqueSenders.slice(0, 2).join(', ')
 
-  // For more than 2 senders, show first two and count
-  const otherCount = uniqueSenders.length - 2
-  return `${uniqueSenders.slice(0, 2).join(', ')} (${otherCount + 2})`
+  return (
+    <span>
+      {senderNames}
+      <span className="text-xs text-gray-400 font-normal ml-1">({uniqueSenders.length})</span>
+    </span>
+  )
 }
