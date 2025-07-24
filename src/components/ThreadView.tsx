@@ -3,6 +3,7 @@ import { useEmailStore } from '../store/emailStore'
 import { useEffect, useMemo, useRef } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import type { Email } from '../types'
+import { formatRelativeTime } from '../utils/time'
 
 export function ThreadView() {
   const readOnceRef = useRef<Set<string>>(new Set())
@@ -30,7 +31,6 @@ export function ThreadView() {
     const unreadEmails = threadEmails.filter(
       (email: Email) => email.unread && !readOnceRef.current.has(email.id)
     )
-
     if (unreadEmails.length > 0) {
       unreadEmails.forEach((email: Email) => {
         markEmailAsRead(email.id)
@@ -55,15 +55,15 @@ export function ThreadView() {
   }
 
   return (
-    <div className="p-4 space-y-4">
+    <div>
       {threadEmails.map((email: Email) => (
-        <div key={email.id} className="border rounded p-4 shadow-sm bg-white">
+        <div key={email.id} className="thread-view">
           <div className="flex justify-between text-sm text-gray-500">
             <div>
               <span className="font-semibold text-black">{email.from.name}</span> &lt;
               {email.from.email}&gt;
             </div>
-            <div>{new Date(email.date).toLocaleString()}</div>
+            <div>{formatRelativeTime(email.date)}</div>
           </div>
           <div className="font-bold">{email.subject}</div>
           <div className="mt-2 whitespace-pre-wrap text-sm">{email.body}</div>
@@ -74,24 +74,14 @@ export function ThreadView() {
           </div>
         </div>
       ))}
-
-      <div className="mt-4 flex gap-4">
-        <button
-          className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded"
-          onClick={() => handleMove('spam')}
-        >
+      <div className="thread-actions">
+        <button className="spam" onClick={() => handleMove('spam')}>
           Move to Spam
         </button>
-        <button
-          className="px-3 py-1 bg-red-100 text-red-800 rounded"
-          onClick={() => handleMove('trash')}
-        >
+        <button className="trash" onClick={() => handleMove('trash')}>
           Move to Trash
         </button>
-        <button
-          className="px-3 py-1 bg-gray-100 text-gray-800 rounded"
-          onClick={() => handleMove('inbox')}
-        >
+        <button className="inbox" onClick={() => handleMove('inbox')}>
           Move to Inbox
         </button>
       </div>

@@ -1,10 +1,14 @@
-import clsx from 'clsx'
 import { NavLink } from 'react-router-dom'
 import { useEmailStore } from '../store/emailStore'
-import type { Email } from '../types'
 import { CONFIG } from '../utils/constants'
 
-const folders = ['inbox', 'starred', 'spam', 'trash', 'all'] as const
+const folders = [
+  { key: 'inbox', name: 'Inbox', icon: 'inbox' },
+  { key: 'starred', name: 'Starred', icon: 'star' },
+  { key: 'all', name: 'All Mail', icon: 'mail' },
+  { key: 'spam', name: 'Spam', icon: 'report' },
+  { key: 'trash', name: 'Trash', icon: 'delete' },
+] as const
 
 export function Sidebar() {
   const emails = useEmailStore((s) => s.emails)
@@ -16,7 +20,7 @@ export function Sidebar() {
         : emails.filter((e) => !e.isSpam && !e.isTrash && e.unread).length
     }
     if (folder === 'starred') {
-      return emails.filter((e) => e.starred && includeInFolder(e, folder)).length
+      return emails.filter((e) => e.starred && !e.isSpam && !e.isTrash).length
     }
     if (folder === 'spam') {
       return emails.filter((e) => e.isSpam).length
@@ -30,35 +34,33 @@ export function Sidebar() {
     return 0
   }
 
-  const includeInFolder = (email: Email, folder: string) => {
-    if (folder === 'starred') {
-      return (
-        email.starred &&
-        (!email.isTrash || CONFIG.showStarredSpamInStarred) &&
-        (!email.isSpam || CONFIG.showStarredSpamInStarred)
-      )
-    }
-    return true
-  }
-
   return (
-    <aside className="w-64 p-4 border-r border-gray-300 h-screen bg-white">
-      <nav className="flex flex-col gap-2">
-        {folders.map((folder) => (
-          <NavLink
-            key={folder}
-            to={`/${folder}`}
-            className={({ isActive }) =>
-              clsx(
-                'text-sm px-3 py-2 rounded hover:bg-gray-100 flex justify-between',
-                isActive && 'bg-gray-200 font-semibold'
-              )
-            }
-          >
-            <span className="capitalize">{folder}</span>
-            <span>{getCount(folder)}</span>
-          </NavLink>
-        ))}
+    <aside className="w-64 bg-gray-50 border-r border-gray-200 flex flex-col">
+      <nav className="flex-1 py-2">
+        {folders.map((folder) => {
+          const count = getCount(folder.key)
+          return (
+            <NavLink
+              key={folder.key}
+              to={`/${folder.key}`}
+              className={({ isActive }) =>
+                `relative flex items-center justify-between px-4 py-3 mx-2 rounded-full text-sm font-medium transition-colors ${
+                  isActive ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
+                }`
+              }
+            >
+              <div className="flex items-center gap-4">
+                <span className="material-icons text-lg">{folder.icon}</span>
+                <span>{folder.name}</span>
+              </div>
+              {(folder.key === 'inbox' || folder.key === 'spam') && count > 0 && (
+                <span className="text-xs text-gray-600 font-normal min-w-[20px] text-right">
+                  {count}
+                </span>
+              )}
+            </NavLink>
+          )
+        })}
       </nav>
     </aside>
   )
