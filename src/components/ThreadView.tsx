@@ -120,7 +120,7 @@ export const ThreadView = () => {
       .slice(0, 2)
   }
 
-  const subject = threadEmails[0]?.subject || 'No Subject'
+  const subject = threadEmails[threadEmails.length - 1]?.subject || 'No Subject'
 
   return (
     <div className="flex-1 bg-white flex flex-col overflow-hidden">
