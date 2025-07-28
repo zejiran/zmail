@@ -8,7 +8,7 @@ export const EmailList = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const path = location.pathname.replace('/', '')
-  const { emails, toggleStar } = useEmailStore()
+  const { emails, toggleStar, toggleThreadStar } = useEmailStore()
 
   const threadMap = new Map<string, Email>()
   const threadUnreadMap = new Map<string, boolean>()
@@ -28,17 +28,30 @@ export const EmailList = () => {
     }
   })
 
-  // Create final filtered list with thread-level unread status
+  // Create final filtered list with thread-level unread and starred status
   const filtered = Array.from(threadMap.values())
-    .map((email) => ({
-      ...email,
-      unread: threadUnreadMap.get(email.threadId) || false,
-    }))
+    .map((email) => {
+      const threadEmails = emails.filter((e) => e.threadId === email.threadId)
+      const threadStarred = threadEmails.some((e) => e.starred)
+
+      return {
+        ...email,
+        unread: threadUnreadMap.get(email.threadId) || false,
+        starred: threadStarred,
+      }
+    })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
-  const handleStarClick = (e: React.MouseEvent, emailId: string) => {
+  const handleStarClick = (e: React.MouseEvent, email: Email) => {
     e.stopPropagation()
-    toggleStar(emailId)
+
+    // For parent folders (inbox, spam, trash, all), use thread-level starring
+    // For starred folder or thread view, use individual email starring
+    if (path === 'starred') {
+      toggleStar(email.id)
+    } else {
+      toggleThreadStar(email.threadId, path)
+    }
   }
 
   const handleEmailClick = (email: Email) => {
@@ -68,7 +81,7 @@ export const EmailList = () => {
               {showStarButton && (
                 <div className="flex items-center w-8">
                   <button
-                    onClick={(e) => handleStarClick(e, email.id)}
+                    onClick={(e) => handleStarClick(e, email)}
                     className="hover:bg-gray-100 rounded transition-colors"
                   >
                     <span
