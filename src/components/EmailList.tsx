@@ -1,6 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useEmailStore } from '../store/emailStore'
-
 import type { Email } from '../types'
 import { formatRelativeTime } from '../utils/time'
 
@@ -8,13 +7,13 @@ export const EmailList = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const path = location.pathname.replace('/', '')
-  const { emails, toggleStar, toggleThreadStar } = useEmailStore()
+  const { emails, toggleStar, toggleThreadStar, getFilteredEmails, searchQuery } = useEmailStore()
 
   const threadMap = new Map<string, Email>()
   const threadUnreadMap = new Map<string, boolean>()
 
   // First pass: collect all filtered emails and track unread status per thread
-  const filteredEmails = emails.filter((email) => filterByFolder(email, path))
+  const filteredEmails = getFilteredEmails(path)
 
   filteredEmails.forEach((email) => {
     // Track if any email in this thread is unread
@@ -68,6 +67,13 @@ export const EmailList = () => {
         </div>
       ) : (
         <div className="flex-1 overflow-y-auto divide-y divide-gray-100">
+          {searchQuery && (
+            <div className="px-6 py-2 bg-gray-50 border-b border-gray-200">
+              <p className="text-sm text-gray-600">
+                Search results for "{searchQuery}" ({filtered.length} found)
+              </p>
+            </div>
+          )}
           {filtered.map((email) => (
             <div
               key={email.id}
@@ -126,23 +132,6 @@ export const EmailList = () => {
       )}
     </div>
   )
-}
-
-function filterByFolder(email: Email, folder: string): boolean {
-  switch (folder) {
-    case 'inbox':
-      return !email.isSpam && !email.isTrash
-    case 'spam':
-      return email.isSpam
-    case 'trash':
-      return email.isTrash
-    case 'starred':
-      return email.starred && !email.isSpam && !email.isTrash
-    case 'all':
-      return true
-    default:
-      return false
-  }
 }
 
 function formatSenderNameWithCount(name: string, threadId: string, allEmails: Email[]) {

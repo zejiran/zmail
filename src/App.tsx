@@ -2,13 +2,15 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { Sidebar } from './components/Sidebar'
 import { EmailList } from './components/EmailList'
 import { ThreadView } from './components/ThreadView'
+import { SearchBar } from './components/SearchBar'
 
 function App() {
   return (
     <div className="flex flex-col h-screen bg-white overflow-hidden">
       <header className="bg-white border-b border-gray-200 px-14 py-3 flex-shrink-0">
-        <div className="flex items-center">
+        <div className="flex items-center justify-between">
           <img src="/zmail-logo.png" alt="ZMail" className="h-8 w-auto" />
+          <SearchBar className="w-96" />
         </div>
       </header>
 
